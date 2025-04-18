@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HasattanRafa - Satıcı Sayfası</title>
+    <link rel="icon" href="img/HasattanRafaLogo1.jpg" type="image/jpg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f7f9fc;
+            min-height: 100vh;
+            background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1556742031-c6961e8560b0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4caf50;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 45px;
+            width: auto;
+            margin-right: 12px;
+            object-fit: contain;
+            vertical-align: middle;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-name {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .logout-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background-color: #d32f2f;
+        }
+        
+        .main-content {
+            padding: 30px 0;
+        }
+        
+        .page-title {
+            color: white;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .action-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .add-product-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .add-product-btn:hover {
+            background-color: #388e3c;
+        }
+        
+        .products-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .product-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .product-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .product-details {
+            margin-bottom: 15px;
+        }
+        
+        .product-detail {
+            display: flex;
+            margin-bottom: 8px;
+        }
+        
+        .detail-label {
+            font-weight: 500;
+            width: 160px;
+            color: #666;
+        }
+        
+        .detail-value {
+            color: #333;
+            flex: 1;
+        }
+        
+        .product-id {
+            background-color: #f5f5f5;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 12px;
+            color: #666;
+            word-break: break-all;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 30px auto;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            position: relative;
+            animation: modalopen 0.4s;
+        }
+        
+        @keyframes modalopen {
+            from {
+                opacity: 0;
+                transform: translateY(-60px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+        }
+        
+        .close-modal:hover {
+            color: #333;
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            color: #4caf50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #4caf50;
+        }
+        
+        .image-upload-container {
+            margin-top: 10px;
+            border: 2px dashed #ddd;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .image-upload-container:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .image-upload-label {
+            display: block;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .image-upload-input {
+            display: none;
+        }
+        
+        .upload-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #4caf50;
+        }
+        
+        .image-preview {
+            max-width: 100%;
+            margin-top: 10px;
+            display: none;
+            border-radius: 5px;
+        }
+        
+        .submit-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+            width: 100%;
+        }
+        
+        .submit-btn:hover {
+            background-color: #388e3c;
+        }
+        
+        .success-message {
+            display: none;
+            background-color: #dff0d8;
+            color: #3c763d;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .error-message {
+            display: none;
+            background-color: #f2dede;
+            color: #a94442;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            max-width: 600px;
+        }
+        
+        .empty-state-icon {
+            font-size: 50px;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+        
+        .empty-state-text {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .user-info {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 20px auto;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <img src="img/HasattanRafaLogo1.jpg" alt="HasattanRafa Logo">
+                HasattanRafa
+            </div>
+            <div class="user-info">
+                <span class="user-name" id="user-fullname">Kullanıcı Adı</span>
+                <button class="logout-btn" id="logout-btn">Çıkış Yap</button>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container main-content">
+        <h1 class="page-title">Satış Ürün Yönetimi</h1>
+        
+        <div class="action-container">
+            <button class="add-product-btn" id="add-product-btn">Yeni Ürün Ekle</button>
+        </div>
+        
+        <div id="products-list" class="products-container">
+            <!-- Ürünler burada dinamik olarak listelenecek -->
+        </div>
+        
+        <div id="empty-state" class="empty-state">
+            <div class="empty-state-icon">🛒</div>
+            <div class="empty-state-text">Henüz ürün eklenmemiş. Yeni bir ürün eklemek için "Yeni Ürün Ekle" butonuna tıklayın.</div>
+            <button class="add-product-btn" id="empty-add-btn">Yeni Ürün Ekle</button>
+        </div>
+    </div>
+    
+    <!-- Ürün Ekleme Modal -->
+    <div id="add-product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <h2 class="modal-title">Yeni Ürün Ekle</h2>
+            
+            <div class="success-message" id="form-success">Ürün başarıyla eklendi!</div>
+            <div class="error-message" id="form-error">Lütfen tüm alanları doldurun.</div>
+            
+            <form id="add-product-form">
+                <div class="form-group">
+                    <label class="form-label" for="product-id">Ürün ID</label>
+                    <input type="text" id="product-id" class="form-input" placeholder="Örn: PROD-12345" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="receive-date">Ürünü Teslim Alış Tarihi</label>
+                    <input type="date" id="receive-date" class="form-input" required>
+                    
+                    <div class="image-upload-container">
+                        <label class="image-upload-label">
+                            <span class="upload-icon">📷</span>
+                            <span>Teslim alış görselini yüklemek için tıklayın</span>
+                            <input type="file" class="image-upload-input" id="receive-image" accept="image/*">
+                        </label>
+                        <img id="receive-image-preview" class="image-preview">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="company-info">Ürünü Teslim Alan Firma ve Adresi</label>
+                    <input type="text" id="company-info" class="form-input" placeholder="Örn: ABC Market, Adana Merkez" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="delivery-vehicle">Ürünü Teslim Aldığı Araç Plakası</label>
+                    <input type="text" id="delivery-vehicle" class="form-input" placeholder="Örn: 01 ABC 123" required>
+                    
+                    <div class="image-upload-container">
+                        <label class="image-upload-label">
+                            <span class="upload-icon">📷</span>
+                            <span>Araç görselini yüklemek için tıklayın</span>
+                            <input type="file" class="image-upload-input" id="vehicle-image" accept="image/*">
+                        </label>
+                        <img id="vehicle-image-preview" class="image-preview">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="storage-conditions">Ürünün Depolanma Koşulları</label>
+                    <input type="text" id="storage-conditions" class="form-input" placeholder="Örn: Serin ve kuru ortamda" required>
+                    
+                    <div class="image-upload-container">
+                        <label class="image-upload-label">
+                            <span class="upload-icon">📷</span>
+                            <span>Depolama görselini yüklemek için tıklayın</span>
+                            <input type="file" class="image-upload-input" id="storage-image" accept="image/*">
+                        </label>
+                        <img id="storage-image-preview" class="image-preview">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="product-price">Ürünün Fiyatı (TL)</label>
+                    <input type="number" id="product-price" class="form-input" placeholder="Örn: 129.90" min="0" step="0.01" required>
+                    
+                    <div class="image-upload-container">
+                        <label class="image-upload-label">
+                            <span class="upload-icon">📷</span>
+                            <span>Raf görselini yüklemek için tıklayın</span>
+                            <input type="file" class="image-upload-input" id="shelf-image" accept="image/*">
+                        </label>
+                        <img id="shelf-image-preview" class="image-preview">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="sale-date">Ürünün Satış Tarihi</label>
+                    <input type="date" id="sale-date" class="form-input" required>
+                </div>
+                
+                <button type="submit" class="submit-btn">Ürünü Kaydet</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Kullanıcı bilgilerini localStorage'dan al
+        let currentUser = null;
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const storedEmail = localStorage.getItem('currentUserEmail');
+        
+        console.log("Saklanan Email:", storedEmail);
+        console.log("Kayıtlı Kullanıcılar:", users);
+        
+        // Eğer kullanıcı localStorage'da varsa, bilgilerini al
+        if (storedEmail) {
+            currentUser = users.find(user => user.email === storedEmail);
+            console.log("Bulunan Kullanıcı:", currentUser);
+        }
+        
+        // Eğer kullanıcı bilgisi yoksa, login sayfasına yönlendir
+        if (!currentUser) {
+            console.log("Kullanıcı bulunamadı, login sayfasına yönlendiriliyor.");
+            window.location.href = 'login.html';
+        } else if (currentUser.userType !== 'satici') {
+            console.log("Kullanıcı satıcı değil, login sayfasına yönlendiriliyor.");
+            window.location.href = 'login.html';
+        } else {
+            // Kullanıcı bilgilerini görüntüle
+            console.log("Kullanıcı bilgileri görüntüleniyor.");
+            document.getElementById('user-fullname').textContent = currentUser.fullname;
+        }
+        
+        // DOM elementleri
+        const logoutBtn = document.getElementById('logout-btn');
+        const addProductBtn = document.getElementById('add-product-btn');
+        const emptyAddBtn = document.getElementById('empty-add-btn');
+        const modal = document.getElementById('add-product-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const productForm = document.getElementById('add-product-form');
+        const formSuccess = document.getElementById('form-success');
+        const formError = document.getElementById('form-error');
+        const productsContainer = document.getElementById('products-list');
+        const emptyState = document.getElementById('empty-state');
+        
+        // Resim yükleme önizleme fonksiyonları
+        const imageInputs = document.querySelectorAll('.image-upload-input');
+        imageInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                const preview = document.getElementById(`${this.id}-preview`);
+                const file = this.files[0];
+                
+                if (file) {
+                    const reader = new FileReader();
+                    reader.addEventListener('load', function() {
+                        preview.src = this.result;
+                        preview.style.display = 'block';
+                    });
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+        
+        // Çıkış yapma işlemi
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('currentUserEmail');
+            window.location.href = 'login.html';
+        });
+        
+        // Modal açma butonları
+        addProductBtn.addEventListener('click', () => {
+            modal.style.display = 'block';
+        });
+        
+        emptyAddBtn.addEventListener('click', () => {
+            modal.style.display = 'block';
+        });
+        
+        // Modal kapatma butonu
+        closeModalBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+            resetForm();
+        });
+        
+        // Modal dışı tıklamayla kapatma
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                resetForm();
+            }
+        });
+        
+        // Formu sıfırlama fonksiyonu
+        function resetForm() {
+            productForm.reset();
+            formSuccess.style.display = 'none';
+            formError.style.display = 'none';
+            imageInputs.forEach(input => {
+                const preview = document.getElementById(`${input.id}-preview`);
+                preview.style.display = 'none';
+                preview.src = '';
+            });
+        }
+        
+        // Form gönderme işlemi
+        productForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Form verilerini al
+            const productId = document.getElementById('product-id').value;
+            const receiveDate = document.getElementById('receive-date').value;
+            const companyInfo = document.getElementById('company-info').value;
+            const deliveryVehicle = document.getElementById('delivery-vehicle').value;
+            const storageConditions = document.getElementById('storage-conditions').value;
+            const productPrice = document.getElementById('product-price').value;
+            const saleDate = document.getElementById('sale-date').value;
+            
+            // Görsel verilerini al
+            const receiveImage = document.getElementById('receive-image-preview').src;
+            const vehicleImage = document.getElementById('vehicle-image-preview').src;
+            const storageImage = document.getElementById('storage-image-preview').src;
+            const shelfImage = document.getElementById('shelf-image-preview').src;
+            
+            // Form doğrulama
+            if (!productId || !receiveDate || !companyInfo || !deliveryVehicle || 
+                !storageConditions || !productPrice || !saleDate) {
+                formError.style.display = 'block';
+                formSuccess.style.display = 'none';
+                return;
+            }
+            
+            // Yeni ürün nesnesi oluştur
+            const newProduct = {
+                id: productId,
+                receiveDate: receiveDate,
+                companyInfo: companyInfo,
+                deliveryVehicle: deliveryVehicle,
+                storageConditions: storageConditions,
+                productPrice: productPrice,
+                saleDate: saleDate,
+                receiveImage: receiveImage,
+                vehicleImage: vehicleImage,
+                storageImage: storageImage,
+                shelfImage: shelfImage,
+                createdAt: new Date().toISOString(),
+                userId: currentUser.email
+            };
+            
+            // Ürünleri localStorage'dan al veya boş dizi oluştur
+            let sellerProducts = JSON.parse(localStorage.getItem('sellerProducts')) || [];
+            
+            // ID'nin benzersiz olduğunu kontrol et
+            if (sellerProducts.some(product => product.id === productId)) {
+                formError.textContent = 'Bu ürün ID zaten kullanılıyor';
+                formError.style.display = 'block';
+                formSuccess.style.display = 'none';
+                return;
+            }
+            
+            // Yeni ürünü ekle
+            sellerProducts.push(newProduct);
+            
+            // localStorage'a kaydet
+            localStorage.setItem('sellerProducts', JSON.stringify(sellerProducts));
+            
+            // Başarı mesajı göster
+            formSuccess.style.display = 'block';
+            formError.style.display = 'none';
+            
+            // Formu sıfırla
+            setTimeout(() => {
+                resetForm();
+                modal.style.display = 'none';
+                
+                // Ürün listesini güncelle
+                displayProducts();
+            }, 2000);
+        });
+        
+        // Ürünleri görüntüleme fonksiyonu
+        function displayProducts() {
+            const sellerProducts = JSON.parse(localStorage.getItem('sellerProducts')) || [];
+            
+            // Sadece mevcut kullanıcının ürünlerini filtrele
+            const userProducts = sellerProducts.filter(product => product.userId === currentUser.email);
+            
+            // Ürün listesi veya boş durum mesajını göster
+            if (userProducts.length > 0) {
+                productsContainer.style.display = 'grid';
+                emptyState.style.display = 'none';
+                
+                // Ürün kartlarını oluştur
+                productsContainer.innerHTML = '';
+                userProducts.forEach(product => {
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.innerHTML = `
+                        <h3 class="product-title">Ürün ID: ${product.id}</h3>
+                        <div class="product-details">
+                            <div class="product-detail">
+                                <span class="detail-label">Firma Bilgisi:</span>
+                                <span class="detail-value">${product.companyInfo}</span>
+                            </div>
+                            <div class="product-detail">
+                                <span class="detail-label">Teslim Alış Tarihi:</span>
+                                <span class="detail-value">${formatDate(product.receiveDate)}</span>
+                            </div>
+                            <div class="product-detail">
+                                <span class="detail-label">Fiyat:</span>
+                                <span class="detail-value">${formatPrice(product.productPrice)} TL</span>
+                            </div>
+                            <div class="product-detail">
+                                <span class="detail-label">Satış Tarihi:</span>
+                                <span class="detail-value">${formatDate(product.saleDate)}</span>
+                            </div>
+                        </div>
+                    `;
+                    productsContainer.appendChild(card);
+                });
+            } else {
+                productsContainer.style.display = 'none';
+                emptyState.style.display = 'block';
+            }
+        }
+        
+        // Tarih formatı fonksiyonu
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('tr-TR', options);
+        }
+        
+        // Fiyat formatı fonksiyonu
+        function formatPrice(price) {
+            return parseFloat(price).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+        
+        // Sayfa yüklendiğinde ürünleri görüntüle
+        document.addEventListener('DOMContentLoaded', () => {
+            // Giriş yapan kullanıcının e-postasını localStorage'a kaydet
+            // Bu, sayfayı yenilediğimizde hala kullanıcının giriş yaptığını bilmemizi sağlar
+            if (currentUser) {
+                localStorage.setItem('currentUserEmail', currentUser.email);
+            }
+            
+            // Ürünleri görüntüle
+            displayProducts();
+        });
+    </script>
+</body>
+</html>

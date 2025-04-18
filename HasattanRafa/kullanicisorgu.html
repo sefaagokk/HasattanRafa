@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HasattanRafa - Ürün Sorgulama</title>
+    <link rel="icon" href="img/HasattanRafaLogo1.jpg" type="image/jpg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f7f9fc;
+            min-height: 100vh;
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1543269865-cbf427effbad?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4caf50;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 45px;
+            width: auto;
+            margin-right: 12px;
+            object-fit: contain;
+            vertical-align: middle;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .back-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .back-btn:hover {
+            background-color: #388e3c;
+        }
+        
+        .main-content {
+            padding: 30px 0;
+        }
+        
+        .page-title {
+            color: white;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .search-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .search-input {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #4caf50;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+        
+        .search-btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .search-btn:hover {
+            background-color: #388e3c;
+        }
+        
+        .results-container {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .results-header {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px 5px 0 0;
+            border-bottom: 2px solid #4caf50;
+        }
+        
+        .product-id {
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .timeline {
+            position: relative;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: white;
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #e0e0e0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 70px;
+            padding-bottom: 30px;
+        }
+        
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+        
+        .timeline-icon {
+            position: absolute;
+            left: 36px;
+            top: 0;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: white;
+            z-index: 10;
+        }
+        
+        .timeline-icon.producer {
+            background-color: #2196f3;
+        }
+        
+        .timeline-icon.logistics-1 {
+            background-color: #ff9800;
+        }
+        
+        .timeline-icon.factory {
+            background-color: #9c27b0;
+        }
+        
+        .timeline-icon.logistics-2 {
+            background-color: #ff9800;
+        }
+        
+        .timeline-icon.seller {
+            background-color: #f44336;
+        }
+        
+        .timeline-content {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .timeline-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .timeline-date {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .timeline-details {
+            margin-bottom: 15px;
+        }
+        
+        .detail-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+        
+        .detail-label {
+            font-weight: 500;
+            width: 150px;
+            color: #666;
+        }
+        
+        .detail-value {
+            color: #333;
+            flex: 1;
+        }
+        
+        .images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        
+        .timeline-image {
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .timeline-image:hover {
+            transform: scale(1.05);
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 30px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        
+        .no-results-icon {
+            font-size: 40px;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+        
+        .no-results-text {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        /* Modal Styles */
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            overflow: auto;
+        }
+        
+        .modal-content {
+            margin: 40px auto;
+            display: block;
+            max-width: 80%;
+            max-height: 80%;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .timeline-item {
+                padding-left: 50px;
+            }
+            
+            .timeline-icon {
+                left: 16px;
+            }
+            
+            .timeline-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .detail-row {
+                flex-direction: column;
+            }
+            
+            .detail-label {
+                width: 100%;
+                margin-bottom: 3px;
+            }
+            
+            .modal-content {
+                max-width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <img src="img/HasattanRafaLogo1.jpg" alt="HasattanRafa Logo">
+                HasattanRafa
+            </div>
+            <div class="user-info">
+                <a href="login.html" class="back-btn">Sisteme Giriş Sayfası</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container main-content">
+        <h1 class="page-title">Ürün Sorgulama</h1>
+        
+        <div class="search-container">
+            <h2 class="search-title">Ürün ID Numarası Girin</h2>
+            <form class="search-form" id="search-form">
+                <input type="text" class="search-input" id="product-id-input" placeholder="Örn: PROD-12345" required>
+                <button type="submit" class="search-btn">Sorgula</button>
+            </form>
+        </div>
+        
+        <div class="results-container" id="results-container">
+            <div class="results-header">
+                <div class="product-id" id="result-product-id">Ürün ID: PROD-12345</div>
+            </div>
+            <div class="timeline">
+                <!-- Üretici Bilgileri -->
+                <div class="timeline-item">
+                    <div class="timeline-icon producer">🌾</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">
+                            <span>Üretici Bilgileri</span>
+                            <span class="timeline-date">10 Haziran 2023</span>
+                        </div>
+                        <div class="timeline-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Üretici:</span>
+                                <span class="detail-value">Ahmet Çiftçi</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Ürün Türü:</span>
+                                <span class="detail-value">Buğday</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Üretim Yeri:</span>
+                                <span class="detail-value">Adana, Türkiye</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Hasat Tarihi:</span>
+                                <span class="detail-value">5 Haziran 2023</span>
+                            </div>
+                        </div>
+                        <div class="images-grid">
+                            <img src="https://images.unsplash.com/photo-1468421870903-4df1664ac249?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" class="timeline-image" alt="Üretim Görsel 1">
+                            <img src="https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" class="timeline-image" alt="Üretim Görsel 2">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Üreticiden Fabrikaya Nakliyat -->
+                <div class="timeline-item">
+                    <div class="timeline-icon logistics-1">🚚</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">
+                            <span>Üreticiden Fabrikaya Nakliyat</span>
+                            <span class="timeline-date">12 Haziran 2023</span>
+                        </div>
+                        <div class="timeline-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Nakliyeci:</span>
+                                <span class="detail-value">Hızlı Taşıma Ltd.</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Teslim Alma:</span>
+                                <span class="detail-value">12 Haziran 2023</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Muhafaza Koşulu:</span>
+                                <span class="detail-value">Kuru ve serin ortam</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Teslim Yeri:</span>
+                                <span class="detail-value">ABC Un Fabrikası, İzmir</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Teslim Tarihi:</span>
+                                <span class="detail-value">15 Haziran 2023</span>
+                            </div>
+                        </div>
+                        <div class="images-grid">
+                            <img src="https://images.unsplash.com/photo-1519003722824-194d4455a60c?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" class="timeline-image" alt="Nakliyat Görsel 1">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Fabrika Bilgileri -->
+                <div class="timeline-item">
+                    <div class="timeline-icon factory">🏭</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">
+                            <span>Fabrika İşlemleri</span>
+                            <span class="timeline-date">18 Haziran 2023</span>
+                        </div>
+                        <div class="timeline-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Fabrika:</span>
+                                <span class="detail-value">ABC Un Fabrikası</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">İşlem Türü:</span>
+                                <span class="detail-value">Un Öğütme</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">İşlem Tarihi:</span>
+                                <span class="detail-value">16-18 Haziran 2023</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Kalite Kontrolü:</span>
+                                <span class="detail-value">Yüksek Kaliteli (A Sınıfı)</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Paketleme:</span>
+                                <span class="detail-value">25 kg'lık çuvallar</span>
+                            </div>
+                        </div>
+                        <div class="images-grid">
+                            <img src="https://images.unsplash.com/photo-1518391846015-55a9cc003b25?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" class="timeline-image" alt="Fabrika Görsel 1">
+                            <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" class="timeline-image" alt="Fabrika Görsel 2">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Fabrikadan Satıcıya Nakliyat -->
+                <div class="timeline-item">
+                    <div class="timeline-icon logistics-2">🚚</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">
+                            <span>Fabrikadan Satıcıya Nakliyat</span>
+                            <span class="timeline-date">20 Haziran 2023</span>
+                        </div>
+                        <div class="timeline-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Nakliyeci:</span>
+                                <span class="detail-value">Güvenli Dağıtım A.Ş.</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Teslim Alma:</span>
+                                <span class="detail-value">20 Haziran 2023</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Muhafaza Koşulu:</span>
+                                <span class="detail-value">Kuru ortam</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Teslim Yeri:</span>
+                                <span class="detail-value">XYZ Market, İstanbul</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Teslim Tarihi:</span>
+                                <span class="detail-value">22 Haziran 2023</span>
+                            </div>
+                        </div>
+                        <div class="images-grid">
+                            <img src="https://images.unsplash.com/photo-1515745491942-3acddbd0d083?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" class="timeline-image" alt="Nakliyat Görsel 2">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Satıcı Bilgileri -->
+                <div class="timeline-item">
+                    <div class="timeline-icon seller">🛒</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">
+                            <span>Satıcı Bilgileri</span>
+                            <span class="timeline-date">25 Haziran 2023</span>
+                        </div>
+                        <div class="timeline-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Satıcı:</span>
+                                <span class="detail-value">XYZ Market</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Konum:</span>
+                                <span class="detail-value">İstanbul Merkez</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Raf Durumu:</span>
+                                <span class="detail-value">Ön rafta sergileniyor</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Fiyat:</span>
+                                <span class="detail-value">35.90 TL</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Son Kullanma:</span>
+                                <span class="detail-value">18 Aralık 2023</span>
+                            </div>
+                        </div>
+                        <div class="images-grid">
+                            <img src="https://images.unsplash.com/photo-1588964895597-cfccd6e2dbf9?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" class="timeline-image" alt="Satıcı Görsel 1">
+                            <img src="https://images.unsplash.com/photo-1578916171728-46686eac8d58?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" class="timeline-image" alt="Satıcı Görsel 2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="no-results" id="no-results">
+            <div class="no-results-icon">🔎</div>
+            <div class="no-results-text">Aradığınız ürün bulunamadı. Lütfen ürün ID'sini kontrol edip tekrar deneyin.</div>
+        </div>
+    </div>
+    
+    <!-- Görsel Modal -->
+    <div id="image-modal" class="image-modal">
+        <span class="modal-close" id="modal-close">&times;</span>
+        <img class="modal-content" id="modal-image">
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchForm = document.getElementById('search-form');
+            const productIdInput = document.getElementById('product-id-input');
+            const resultsContainer = document.getElementById('results-container');
+            const resultProductId = document.getElementById('result-product-id');
+            const noResults = document.getElementById('no-results');
+            
+            // Arama işlemi
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const productId = productIdInput.value.trim();
+                
+                if (productId) {
+                    // Gerçek uygulamada burada API çağrısı yapılır
+                    // Şimdi sadece front-end gösterimi yapacağız
+                    
+                    // Örnek veri kontrolü (gerçek uygulamada değişecek)
+                    if (productId.toUpperCase() === 'PROD-12345') {
+                        resultProductId.textContent = `Ürün ID: ${productId.toUpperCase()}`;
+                        resultsContainer.style.display = 'block';
+                        noResults.style.display = 'none';
+                    } else {
+                        resultsContainer.style.display = 'none';
+                        noResults.style.display = 'block';
+                    }
+                }
+            });
+            
+            // Görsel Önizleme Modal İşlemleri
+            const images = document.querySelectorAll('.timeline-image');
+            const modal = document.getElementById('image-modal');
+            const modalImg = document.getElementById('modal-image');
+            const closeModal = document.getElementById('modal-close');
+            
+            images.forEach(img => {
+                img.addEventListener('click', function() {
+                    modal.style.display = 'block';
+                    modalImg.src = this.src.replace('w=300', 'w=1200');
+                });
+            });
+            
+            closeModal.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
